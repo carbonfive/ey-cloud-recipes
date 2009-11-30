@@ -1,5 +1,5 @@
 check process <%= @worker_name %>
   with pidfile /data/<%= @app_name %>/shared/pids/<%= @worker_name %>.pid
-  start program = "/bin/su -c '/data/<%= @app_name %>/current/script/delayed_job start -- <%= @framework_env %>' - <%= @user %>"
-  stop program = "/bin/su -c '/data/<%= @app_name %>/current/script/delayed_job stop -- <%= @framework_env %>' - <%= @user %>"
+  start program = "/data/<%= @app_name %>/current/script/delayed_job start -- <%= @framework_env %>" as uid <%= @user %>
+  stop program = "/data/<%= @app_name %>/current/script/delayed_job stop -- <%= @framework_env %>" as uid <%= @user %>
   group <%= @app_name %>_jobs
