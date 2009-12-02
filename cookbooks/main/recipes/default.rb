@@ -4,6 +4,7 @@ execute "testing" do
   }
 end
 
+require_recipe 'paperclip'
 require_recipe 'ssmtp'
 require_recipe 'delayed_job'
 
