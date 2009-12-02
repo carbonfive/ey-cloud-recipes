@@ -36,7 +36,11 @@ node[:applications].each do |app_name, data|
       user "root"
       code "monit reload"
       #restart the job runner in the new environment
-      code "monit restart #{worker_name}"
+      #code "monit restart #{worker_name}"
+
+      #kill all workers to remove any orphaned workers caused when monit spawns extra processes
+      #see https://cloud-support.engineyard.com/discussions/problems/415-monit-restart-doesnt-operate-reliably
+      code "pidof #{worker_name} | xargs kill"
     end
   end
 end
