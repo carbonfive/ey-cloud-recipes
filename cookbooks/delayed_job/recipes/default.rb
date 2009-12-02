@@ -35,6 +35,8 @@ node[:applications].each do |app_name, data|
     bash "monit-reload-restart" do
       user "root"
       code "monit reload"
+      #restart the job runner in the new environment
+      code "monit restart #{worker_name}"
     end
   end
 end
