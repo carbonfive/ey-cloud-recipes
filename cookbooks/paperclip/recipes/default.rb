@@ -18,7 +18,7 @@ if ['solo', 'app', 'app_master'].include?(node[:instance_role])
   node[:applications].each do |app_name, data|
     link "setup-paperclip.yml-symlink" do
       to '/data/config/paperclip.yml'
-      target_file "/data/#{app_name}/shared/config/paperclip.yml"
+      target_file "/data/#{app_name}/current/config/paperclip.yml"
     end
   end
 end
