@@ -8,6 +8,7 @@ require_recipe 'paperclip'
 require_recipe 'ssmtp'
 require_recipe 'delayed_job'
 require_recipe 's3fs'
+require_recipe 'checkout_git_repo'
 
 # uncomment if you want to run couchdb recipe
 # require_recipe "couchdb"

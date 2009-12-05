@@ -4,6 +4,8 @@
 #
 if ['solo', 'app', 'util', 'app_master'].include?(node[:instance_role])
 
+  shared_path = '/content.bedsider'
+
   http_request "reporting for s3fs" do
     url node[:reporting_url]
     message :message => "configuring s3fs"
@@ -26,11 +28,11 @@ if ['solo', 'app', 'util', 'app_master'].include?(node[:instance_role])
     mode 0775
   end
 
-  directory "/shared" do
+  directory shared_path do
     owner node[:owner_name]
     group node[:owner_name]
     mode 0775
-    not_if {File.directory?("/shared")}
+    not_if {File.directory?(shared_path)}
   end
 
   #todo: stop hardcoding bucket name in recipe
@@ -55,12 +57,12 @@ if ['solo', 'app', 'util', 'app_master'].include?(node[:instance_role])
   end
 
   bash "add-s3fs-to-fstab" do
-    code "echo 's3fs##{bucket} /shared fuse allow_other,accessKeyId=#{node[:aws_secret_id]},secretAccessKey=#{node[:aws_secret_key]},use_cache=/mnt/s3cache 0 0' >> /etc/fstab"
+    code "echo 's3fs##{bucket} #{shared_path} fuse allow_other,accessKeyId=#{node[:aws_secret_id]},secretAccessKey=#{node[:aws_secret_key]},use_cache=/mnt/s3cache 0 0' >> /etc/fstab"
     not_if "grep 's3fs##{bucket}' /etc/fstab"
   end
 
   bash "maybe-start-s3fs" do
-    code "/usr/bin/s3fs #{bucket} /shared -ouse_cache=/mnt/s3cache -oallow_other"
+    code "/usr/bin/s3fs #{bucket} #{shared_path} -ouse_cache=/mnt/s3cache -oallow_other"
     not_if "ps -A | grep s3fs"
   end
 
