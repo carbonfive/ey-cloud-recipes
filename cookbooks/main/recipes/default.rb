@@ -7,7 +7,7 @@ end
 require_recipe 'paperclip'
 require_recipe 'ssmtp'
 require_recipe 'delayed_job'
-require_recipe 's3fs'
+# require_recipe 's3fs'
 
 # uncomment if you want to run couchdb recipe
 # require_recipe "couchdb"
