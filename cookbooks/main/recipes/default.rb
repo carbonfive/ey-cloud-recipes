@@ -5,6 +5,7 @@ execute "testing" do
 end
 
 require_recipe 'paperclip'
+require_recipe 'google_analytics'
 require_recipe 'ssmtp'
 require_recipe 'delayed_job'
 # require_recipe 's3fs'
