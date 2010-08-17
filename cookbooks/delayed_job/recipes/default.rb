@@ -3,7 +3,7 @@
 # Recipe:: default
 #
 
-if ['solo', 'util'].include?(node[:instance_role]) && !node[:name].match(/^mongodb_/)
+if ['app_master', 'app'].include?(node[:instance_role]) && !node[:name].match(/^mongodb_/)
   node[:applications].each do |app_name,data|
   
     #Always set our worker count to 2
