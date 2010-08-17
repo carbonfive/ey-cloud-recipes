@@ -3,38 +3,31 @@
 # Recipe:: default
 #
 
-node[:applications].each do |app_name, data|
-  user = node[:users].first
-
-  case node[:instance_role]
-    when "solo", "app", "app_master"
-
-      worker_name = "job_runner" #safer to make this "#{app_name}_job_runner" if the environment might run multiple apps using delayed_job
-
-      # The symlink is created in /data/app_name/current/tmp/pids -> /data/app_name/shared/pids, but shared/pids doesn't seem to be?
-      directory "/data/#{app_name}/shared/pids" do
-        owner node[:owner_name]
-        group node[:owner_name]
-        mode 0755
-      end
-
-      template "/etc/monit.d/delayed_job_worker.#{app_name}.monitrc" do
-        source "delayed_job_worker.monitrc.erb"
-        owner user[:username]
-        group user[:username]
+if ['solo', 'util'].include?(node[:instance_role]) && !node[:name].match(/^mongodb_/)
+  node[:applications].each do |app_name,data|
+  
+    #Always set our worker count to 2
+    worker_count = 2
+    
+    worker_count.times do |count|
+      template "/etc/monit.d/delayed_job#{count+1}.#{app_name}.monitrc" do
+        source "dj.monitrc.erb"
+        owner "root"
+        group "root"
         mode 0644
         variables({
-                :app_name => app_name,
-                :user => node[:owner_name],
-                :worker_name => worker_name,
-                :framework_env => node[:environment][:framework_env]
+          :app_name => app_name,
+          :user => node[:owner_name],
+          :worker_name => "delayed_job#{count+1}",
+          :framework_env => node[:environment][:framework_env]
         })
       end
-
-    # Reload monit to pick up configuration changes
-    bash "monit-reload-restart" do
-      user "root"
-      code "monit reload && monit"
     end
+    
+    execute "monit-reload-restart" do
+       command "sleep 30 && monit quit"
+       action :run
+    end
+      
   end
 end
