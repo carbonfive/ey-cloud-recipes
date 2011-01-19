@@ -1,6 +1,6 @@
 ey-cloud-recipes
 ===============
-This is a repository of some basic recipes for EY-Cloud using chef to deploy, setup, and configure common tools for Rails applications.
+This is a repository for the EY-Cloud recipes used by Bedsider.org. Forked from EY recipes.
 
 
 Installation
