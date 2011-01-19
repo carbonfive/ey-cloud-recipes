@@ -2,7 +2,7 @@
 # Cookbook Name:: ssmtp
 # Recipe:: default
 #
-if ['solo', 'app', 'app_master'].include?(node[:instance_role])
+if ['solo', 'app', 'app_master', 'util'].include?(node[:instance_role])
     link "setup-ssmtp.conf-symlink" do
       to '/data/config/ssmtp.conf'
       target_file '/etc/ssmtp/ssmtp.conf'

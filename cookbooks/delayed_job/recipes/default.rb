@@ -3,7 +3,10 @@
 # Recipe:: default
 #
 
-if ['app_master', 'app'].include?(node[:instance_role]) && !node[:name].match(/^mongodb_/)
+# instance role names come from engineyard convention
+
+# util machine is the only guy who will run the delayed jobs
+if ['app', 'app_master','util'].include?(node[:instance_role])
   node[:applications].each do |app_name,data|
   
     #Always set our worker count to 2
